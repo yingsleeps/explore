@@ -7,8 +7,8 @@ import axios from 'axios';
 import MapView, { PROVIDER_GOOGLE, Polygon, Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import GrahamScan from 'graham_scan';
-import Button from '../components/Button.js';
-import {Dim} from '../Constants.js'
+// import Button from '../components/Button.js';
+// import {Dim} from '../Constants.js'
 
 import { fetchLandmarks, fetchPrompt } from '../api'; 
 import Popup from '../components/Popup';
