@@ -164,7 +164,7 @@ const generateLandmarks = async(req, res) => {
         const { latitude, longitude } = req.params
 
         const locationUriComponent = encodeURIComponent(`${latitude},${longitude}`)
-        const radius = 16093.4; // this is measured in meters
+        const radius = 1609.4; // this is measured in meters
 
         let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${locationUriComponent}&radius=${radius}000&key=${process.env.GOOGLE_MAPS_API_KEY}&types=landmark`
 
@@ -190,7 +190,7 @@ const generateLandmarks = async(req, res) => {
             res.status(501).json("Failed to Request Landmarks");
         }
 
-        const firstTenLocations = response.data.results.slice(0, 10);
+        const firstTenLocations = response.data.results.slice(0, 100);
     
         const questLocations = [];
 

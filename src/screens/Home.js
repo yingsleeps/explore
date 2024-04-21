@@ -1,7 +1,8 @@
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native';
 import { Colors } from '../Constants.js' 
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, memo } from "react";
+import axios from 'axios';
 
 import MapView, { PROVIDER_GOOGLE, Polygon, Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -9,9 +10,22 @@ import GrahamScan from 'graham_scan';
 import Button from '../components/Button.js';
 import {Dim} from '../Constants.js'
 
-import axios from 'axios';
+import { fetchLandmarks, fetchPrompt } from '../api'; 
+import Popup from '../components/Popup';
 
-const googleApiKey = 'YOUR_GOOGLE_PLACES_API_KEY';  // Replace with your actual API key
+const MarkerItem = memo(({ detail, onPress }) => (
+    <Marker
+        coordinate={{ latitude: detail.latitude, longitude: detail.longitude }}
+        title={detail.name}
+        onPress={() => onPress(detail)}
+    >
+        <Image
+            source={require('../../assets/place_icon.png')}
+            style={{ width: 60, height: 60 }}
+            resizeMode="cover"
+        />
+    </Marker>
+));
 
 export default function HomeScreen() {    
     const [camera, setCamera] = useState({
@@ -28,8 +42,10 @@ export default function HomeScreen() {
     const mapRef = useRef(camera);
     const [points, setPoints] = useState([]);
     const [hullPoints, setHullPoints] = useState([]);
-    const [places, setPlaces] = useState([{ latitude: 34.0702, longitude: -118.4467 }]);
-    const [visible, setVisible] = useState(false)
+    const [places, setPlaces] = useState([]);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [currentQuest, setCurrentQuest] = useState('');
 
     useEffect(() => {
         let lastPosition = { latitude: null, longitude: null };
@@ -87,9 +103,10 @@ export default function HomeScreen() {
                 if (mapRef.current) {
                     mapRef.current.animateCamera(newCamera, { duration: 1000 });
                 }
-                
-                lastPosition = newPosition;
 
+                fetchLandmarks(latitude, longitude).then(data => {
+                    setPlaces(data);
+                });
                 // getPlaceDetailsByCoordinates(latitude, longitude)
                 //     .then(place => setPlaces(currentPlaces => [...currentPlaces, {
                 //         ...place,
@@ -104,6 +121,8 @@ export default function HomeScreen() {
                     setPoints(newPoints);
                     updateHull(newPoints);
                 }
+
+                lastPosition = newPosition;
             },
             (error) => console.log(error),
             { enableHighAccuracy: true, distanceFilter: 1 }
@@ -169,65 +188,22 @@ export default function HomeScreen() {
         setHullPoints(hull);
     }
 
-    // function renderMarkers(places) {
-    //     return places.map((place, index) => (
-    //         <Marker
-    //             key={index}
-    //             coordinate={{ latitude: place.latitude, longitude: place.longitude }}
-    //             title={place.name}
-    //             description={`Rating: ${place.rating} (${place.user_ratings_total} reviews)`}
-    //             onPress={() => handleMarkerPress(place)}
-    //         >
-    //             <Callout>
-    //                 <View>
-    //                     <Text>{place.name}</Text>
-    //                     <Text>Rating: {place.rating} ({place.user_ratings_total} reviews)</Text>
-    //                 </View>
-    //             </Callout>
-    //         </Marker>
-    //     ))
-    // }
-
-    function renderMarkers(places) {
+    function renderMarkers() {
         return places.map((place, index) => (
-            <Marker
-                key={index}
-                coordinate={{ latitude: place.latitude, longitude: place.longitude }}
-                onPress={() => handleMarkerPress(place)}
-                title="Hello World"
-                description="Welcome to UCLA."
-            >
-                <Callout>
-                    <View>
-                        <Text>{"HEY"}</Text>
-                    </View>
-                </Callout>
-            </Marker>
-        ));
+            <MarkerItem key={index} detail={place} onPress={handleMarkerPress} />
+        ))
     }
 
-    // Returns place details given coordinates
-    function getPlaceDetailsByCoordinates(latitude, longitude) {
-        const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=10&key=${googleApiKey}`;
-
-        return axios.get(url).then(response => {
-            const { results } = response.data;
-            if (results.length > 0) {
-                return results[0];  // returning the first result
-            }
-            throw new Error('No places found');
-        }).catch(error => {
-            console.error('Failed to fetch places', error);
-            throw error;
-        });
-    }
-
-    function handleMarkerPress(place) {
-        console.log("Marker pressed");
-        // console.log("Marker pressed", place);
-        // Here, you can display a modal or navigate to a detail screen
-        // Example: navigation.navigate('PlaceDetail', { place });
-    }
+    const handleMarkerPress = async (landmark) => {
+        try {
+            const prompt = await fetchPrompt(landmark);
+            setCurrentQuest(prompt); 
+            setModalVisible(true); 
+        } catch (error) {
+            console.error("Error in fetching prompt:", error);
+            alert("Failed to fetch prompt. See console for details.");
+        }
+    };
     
     return (
         <View style={styles.container}>  
@@ -236,7 +212,6 @@ export default function HomeScreen() {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 initialCamera={camera}
-                // camera={camera}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 showsBuildings={true}
@@ -255,8 +230,9 @@ export default function HomeScreen() {
                         strokeWidth={1}
                     />
                 )}
-                {renderMarkers(places)}
+                {renderMarkers()}
             </MapView>
+            <Popup visible={modalVisible} setVisible={setModalVisible} quest={currentQuest} />
             <StatusBar style="auto" />
         </View>
     );
@@ -285,3 +261,67 @@ const styles = StyleSheet.create({
     },
 });
 
+
+// [HULL UPDATE IS SOMEHOW WRONG]
+// useEffect(() => {
+//     (async () => {
+//         try {
+//             let { status } = await Location.requestForegroundPermissionsAsync();
+//             if (status !== 'granted') {
+//                 console.error('Permission to access location was denied');
+//                 return;
+//             }
+
+//             Location.watchPositionAsync({
+//                 accuracy: Location.Accuracy.BestForNavigation,
+//                 timeInterval: 5000,
+//                 distanceInterval: 1,
+//             }, (location) => {
+//                 const { latitude, longitude } = location.coords;
+//                 const newPosition = { latitude, longitude };
+//                 const newRectangle = getRectanglePoints(newPosition);
+
+//                 const newHeading = lastPosition.latitude ? calculateBearing(
+//                     lastPosition.latitude,
+//                     lastPosition.longitude,
+//                     latitude,
+//                     longitude
+//                 ) : camera.heading;
+        
+//                 const newCamera = {
+//                     ...camera,
+//                     center: newPosition,
+//                     heading: newHeading  // maintain the old heading initially
+//                 };
+        
+//                 setCamera(newCamera);
+        
+//                 // Animate camera smoothly to the new position and heading
+//                 if (mapRef.current) {
+//                     mapRef.current.animateCamera(newCamera, { duration: 1000 });
+//                 }
+        
+//                 if (isPointOutsideHull(newPosition, hullPoints)) {
+//                     const newPoints = [...points, ...newRectangle];
+//                     setPoints(newPoints);
+//                     updateHull(newPoints);
+//                 }
+
+//                 lastPosition = newPosition;
+        
+//                 // getPlaceDetailsByCoordinates(latitude, longitude)
+//                 //     .then(place => setPlaces(currentPlaces => [...currentPlaces, {
+//                 //         ...place,
+//                 //         latitude, longitude
+//                 //     }]))
+//                 //     .catch(error => console.error('Error fetching place details:', error));
+                
+//                 // setPlaces([...places, {latitude, longitude}])
+//             });
+//         } catch (error) {
+//             console.error("Failed to start location tracking", error);
+//         }
+
+//         return () => subscription.remove();
+//     })();
+// }, [points, hullPoints]);
