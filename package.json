@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.7.1",
+    "@shopify/react-native-skia": "^1.2.3",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -19,6 +20,7 @@
     "@types/react": "~18.2.45",
     "convex-hull": "^1.0.3",
     "expo": "~50.0.14",
+    "ed: "~0.26.4",
     "expo-font": "~11.10.3",
     "expo-splash-screen": "^0.26.4",
     "expo-status-bar": "~1.11.1",
@@ -31,6 +33,7 @@
     "graham_scan": "^1.0.5",
     "react": "18.2.0",
     "react-native": "0.73.6",
+    "react-native-gesture-handler": "^2.16.0",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-geolocation-service": "^5.3.1",

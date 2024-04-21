@@ -7,7 +7,11 @@ import { Colors } from "./src/Constants.js";
 
 import ProfileScreen from './src/screens/Profile';
 import HomeScreen from './src/screens/Home';
+import LoadingScreen from './src/components/Loading.js';
+import DrawScreen from './src/screens/Draw.js';
+
 import { disableErrorHandling } from 'expo';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +19,11 @@ export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'RubikBubbles': require('./assets/fonts/RubikBubbles.ttf'),
   });
+
+  if (!fontsLoaded && !fontError) {
+    return <LoadingScreen/>;
+  }
+  
   return (
     <NavigationContainer>
       <Tab.Navigator 

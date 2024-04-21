@@ -31,10 +31,11 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/RubikBubbles.ttf"]
+          "fonts": [
+            "./assets/fonts/RubikBubbles.ttf"
+          ]
         }
       ]
     ]
   }
 }
-
