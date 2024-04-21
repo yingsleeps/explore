@@ -15,6 +15,7 @@
     "dotenv": "^16.4.5",
     "@react-native-community/geolocation": "^3.2.1",
     "@types/react": "~18.2.45",
+    "axios": "^1.6.8",
     "convex-hull": "^1.0.3",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
