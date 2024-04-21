@@ -37,9 +37,32 @@ export default function App() {
                 const newPosition = {latitude, longitude};
                 const newRectangle = getRectanglePoints({ latitude, longitude });
 
-                // if (getDistance(lastPosition.latitude, lastPosition.longitude, latitude, longitude) > 10) { // meters
-                //     const newHeading = calculateBearing(lastPosition.latitude, lastPosition.longitude, latitude, longitude);
-                //     cameraRef.current.heading = newHeading;
+                // if (getDistance(lastPosition.latitude, lastPosition.longitude, latitude, longitude) > 2) { // meters
+                //     const newHeading = lastPosition.latitude ? calculateBearing(
+                //         lastPosition.latitude,
+                //         lastPosition.longitude,
+                //         latitude,
+                //         longitude
+                //     ) : camera.heading;
+    
+                //     const newCamera = {
+                //         ...camera,
+                //         center: newPosition,
+                //         heading: newHeading  // maintain the old heading initially
+                //     };
+                //     setCamera(newCamera);
+
+                //     // Animate camera smoothly to the new position and heading
+                //     if (mapRef.current) {
+                //         mapRef.current.animateCamera(newCamera, { duration: 1000 });
+                //     }
+                // }
+
+                // if (camera.pitch != 45) {
+                //     setCamera(prevCamera => ({
+                //         ...prevCamera,
+                //         pitch: 45
+                //     }));
                 // }
 
                 const newHeading = lastPosition.latitude ? calculateBearing(
