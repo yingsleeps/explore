@@ -6,11 +6,12 @@ import { useFonts } from 'expo-font';
 import { Colors } from "./src/Constants.js";
 
 import ProfileScreen from './src/screens/Profile';
-import HomeScreen from './src/screens/Home';
+// import HomeScreen from './src/screens/Home';
 import LoadingScreen from './src/components/Loading.js';
 import DrawScreen from './src/screens/Draw.js';
 
 import { disableErrorHandling } from 'expo';
+import CameraComponent from './src/screens/Camera.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -23,6 +24,10 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return <LoadingScreen/>;
   }
+
+  return (
+    <CameraComponent/>
+  )
   
   return (
     <NavigationContainer>
@@ -70,7 +75,7 @@ export default function App() {
         />
         <Tab.Screen 
           name="Home" 
-          component={HomeScreen} 
+          component={CameraComponent} 
           options={{
             tabBarIcon: ({ focused }) => {
               return (
