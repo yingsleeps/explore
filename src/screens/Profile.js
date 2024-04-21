@@ -3,6 +3,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-n
 import { Colors, Dim } from '../Constants';
 import Button  from '../components/Button.js';
 
+import LoadingScreen from '../components/Loading';
 
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,34 +22,31 @@ const ProfileScreen = () => {
         }
       }, [fontsLoaded, fontError]);
     
-      if (!fontsLoaded && !fontError) {
-        return null;
-      }
+    if (!fontsLoaded && !fontError) {
+    return <LoadingScreen/>;
+    }
 
     return (
         <SafeAreaView style={styles.big_container} onLayout={onLayoutRootView}>
-            <ScrollView> 
-                <View style={styles.container}> 
-                    <Text style={styles.name}>Ranger</Text>
-                    <Text style={styles.name}>Sid</Text>
-                    <View style={styles.picContainer}> 
-                        <Image 
-                            source={require("../../assets/BunnyProfile.png")}
-                            style={styles.profile}
-                        />
-                    </View> 
-                    <Text style={styles.name}>Achievements</Text>
-                    <View style={styles.button}>
-                        <Button 
-                            onPress={() => {console.log("hi")}}
-                            text = "View Album"
-                            style={styles.button}
-                        />
-                    </View>
-                        
+            <View style={styles.container}> 
+                <Text style={styles.name}>Ranger</Text>
+                <Text style={styles.name}>Sid</Text>
+                <View style={styles.picContainer}> 
+                    <Image 
+                        source={require("../../assets/BunnyProfile.png")}
+                        style={styles.profile}
+                    />
+                </View> 
+                <Text style={styles.name}>Achievements</Text>
+                <View style={styles.button}>
+                    <Button 
+                        onPress={() => {console.log("hi")}}
+                        text = "View Album"
+                        style={styles.button}
+                    />
                 </View>
-                    
-            </ScrollView> 
+                        
+            </View>     
         </SafeAreaView>
     )
 }

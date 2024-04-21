@@ -7,6 +7,7 @@ export const Dim = {
 
 export const Colors = {
     background_orange: "#FFC34F",
+    background_green: "#CADB63", 
     text_orange: "#C57C27",
     landing_orange: "#DAA24E",
     brown: "#A86D36",

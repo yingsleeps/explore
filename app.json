@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.side-quest"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,10 +31,11 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/RubikBubbles.ttf"]
+          "fonts": [
+            "./assets/fonts/RubikBubbles.ttf"
+          ]
         }
       ]
     ]
   }
 }
-
