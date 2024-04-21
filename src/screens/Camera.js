@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import LoadingScreen from "../components/Loading";
 import SpinAnimation from "../components/SpinAnimation";
+import { useNavigation } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,6 +16,7 @@ export default function CameraComponent() {
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigation();
     const userid = "asdfasdfas"
     const [fontsLoaded, fontError] = useFonts({
         RubikBubbles: require("../../assets/fonts/RubikBubbles.ttf"),
@@ -160,7 +162,7 @@ export default function CameraComponent() {
             <TouchableOpacity
                 // TODO: Navigation for the back button
                 onPress={() => {
-
+                    navigate.navigate("Home")
                 }}
                 style={{
                     flex: 1,

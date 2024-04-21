@@ -72,7 +72,7 @@ const generatePrompt = async(req, res) => {
 
         const challengePrompt = (await challenge.response).text();
         
-        return res.status(200).json(challengePrompt);
+        return res.status(200).json({challengePrompt, art});
     } catch(err){
         console.log(err)
         return res.status(500).json("Internal Error");

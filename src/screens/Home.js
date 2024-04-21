@@ -48,6 +48,8 @@ export default function HomeScreen() {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentQuest, setCurrentQuest] = useState('');
 
+    const [art, setArt] = useState(0);
+
     useEffect(() => {
         let lastPosition = { latitude: null, longitude: null };
 
@@ -201,8 +203,10 @@ export default function HomeScreen() {
 
     const handleMarkerPress = async (landmark) => {
         try {
-            const prompt = await fetchPrompt(landmark);
-            setCurrentQuest(prompt); 
+            let choice = Math.floor(Math.random() * 2);
+            setArt(choice);
+            const prompt = await fetchPrompt(landmark, choice);
+            setCurrentQuest(prompt.challengePrompt); 
             setModalVisible(true); 
         } catch (error) {
             console.error("Error in fetching prompt:", error);
@@ -252,7 +256,7 @@ export default function HomeScreen() {
                     color="#841584"
                 />
             </View>
-            <Popup visible={modalVisible} setVisible={setModalVisible} quest={currentQuest} />
+            {modalVisible && <Popup visible={modalVisible} setVisible={setModalVisible} quest={currentQuest} art={art}/>}
             <StatusBar style="auto" />
         </View>
     );

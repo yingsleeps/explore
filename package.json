@@ -5,8 +5,10 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
+    "ios": "nodemon ./server & echo $! > nodemon.pid & expo run:ios",
+    "postios": "kill $(cat nodemon.pid) 2>/dev/null && rm nodemon.pid",
+    "web": "expo start --web",
+    "poststart": "kill $(ps | grep node | grep -E -o '^ ?[0-9]+') 2>/dev/null"
   },
   "dependencies": {
     "@google/generative-ai": "^0.7.1",

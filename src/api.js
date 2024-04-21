@@ -12,14 +12,14 @@ export const fetchLandmarks = async (latitude, longitude) => {
     }
 };
 
-export const fetchPrompt = async (landmark) => {
+export const fetchPrompt = async (landmark, art) => {
     console.log('Coordinates received:', landmark.latitude, landmark.longitude);
     if (!landmark.latitude || !landmark.longitude) {
         throw new Error('Latitude and longitude are required');
     }
 
     try {
-        const response = await axios.post(`${SERVER_URL}/landmark/generate/prompt`, {landmark: landmark, art: true});
+        const response = await axios.post(`${SERVER_URL}/landmark/generate/prompt`, {landmark: landmark, art: art});
         return response.data;
     } catch (error) {
         console.error('Failed to fetch landmarks:', error);
