@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import { Colors, Dim } from '../Constants';
 import Button  from '../components/Button.js';
@@ -23,29 +24,33 @@ const ProfileScreen = () => {
       }, [fontsLoaded, fontError]);
     
     if (!fontsLoaded && !fontError) {
-    return <LoadingScreen/>;
+        return <LoadingScreen/>;
     }
+
+    const navigation = useNavigation();
 
     return (
         <SafeAreaView style={styles.big_container} onLayout={onLayoutRootView}>
             <View style={styles.container}> 
-                <Text style={styles.name}>Ranger</Text>
-                <Text style={styles.name}>Sid</Text>
+                <Text style={styles.name}>Ranger Sid</Text>
                 <View style={styles.picContainer}> 
                     <Image 
                         source={require("../../assets/BunnyProfile.png")}
                         style={styles.profile}
                     />
                 </View> 
-                <Text style={styles.name}>Achievements</Text>
-                <View style={styles.button}>
+                <Text style={styles.text}>Achievements</Text>
+                <View style={styles.achievement}>
+
+                </View>
+                <View style={styles.button_container}>
                     <Button 
-                        onPress={() => {console.log("hi")}}
+                        onPress={() => { navigation.navigate("Album"); }}
                         text = "View Album"
                         style={styles.button}
                     />
                 </View>
-                        
+                
             </View>     
         </SafeAreaView>
     )
@@ -60,12 +65,20 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: Dim.width,
         height: Dim.height, 
-        paddingTop: 20,
+        paddingTop: 10,
+        alignItems: "center",
     },
     name: {
         fontSize: 40,
         fontFamily: "RubikBubbles",
         alignSelf: "center",
+        color: "white"
+    },
+    text: {
+        fontSize: 30,
+        fontFamily: "RubikBubbles",
+        alignSelf: "flex-start",
+        left: 30,
         color: "white"
     },
     profile: {
@@ -75,12 +88,28 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     button: {
-        alignSelf: "center",
-        margin: 20, 
-    },
-    achievements: {
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        height: 50,
+        borderRadius: 10,
+        marginBottom: 5,
+        marginRight: 7,
+        justifyContent: "center", 
 
+    },
+    button_container: {
+        flexDirection: "row", 
+        justifyContent: 'center',
+        margin: 8,
+    },
+    achievement: {
+        backgroundColor: "#FFF2D9",
+        height: "30%",
+        width: "85%",
+        margin: 15,
+        borderRadius: 20,
     }
+
 })
 
 export default ProfileScreen;

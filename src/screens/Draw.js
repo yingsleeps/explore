@@ -17,11 +17,6 @@ import LoadingScreen from '../components/Loading';
 
 SplashScreen.preventAutoHideAsync();
 
-interface IPath {
-    segments: string[];
-    color?: string;
-}
-
 const DrawScreen = () => {
     const [fontsLoaded, fontError] = useFonts({
         'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),

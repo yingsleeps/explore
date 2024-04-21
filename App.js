@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Colors } from "./src/Constants.js";
 
-import ProfileScreen from './src/screens/Profile';
-// import HomeScreen from './src/screens/Home';
 import LoadingScreen from './src/components/Loading.js';
+
+import NavBar from './src/navigation/NavBar.js';
 import DrawScreen from './src/screens/Draw.js';
-import CameraComponent from './src/screens/Camera.js';
-import { disableErrorHandling } from 'expo';
+import AlbumScreen from './src/screens/Album.js';
 
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -23,84 +22,26 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return <LoadingScreen/>;
   }
-  
-  return(
-    <CameraComponent/>
-  )
 
   return (
     <NavigationContainer>
-      <Tab.Navigator 
-        screenOptions={{ 
-          headerShown: false,
-          tabBarStyle: { 
-            position: 'absolute',
-            bottom: 25,
-            left: 60,
-            right: 60,
-            elevation: 0,
-            borderRadius: 30,
-            height: 60,
-          }, 
-          tabBarShowLabel: false,
-        }}>
-        <Tab.Screen 
-          name="Profile" 
-          component={ProfileScreen} 
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                focused ? (
-                  <View style={styles.focused_profile}> 
-                    <Image 
-                      resizeMode='contain'
-                      source={require("./assets/profile_icon.png")}
-                    />
-                    <Text style={styles.text}>Ranger</Text>
-                  </View>
-                  
-                ) : (
-                  <View style={styles.icon_container}> 
-                    <Image 
-                      resizeMode='contain'
-                      source={require("./assets/profile_icon.png")}
-                    />
-                    
-                  </View>
-                )
-              );
-            },
+      <Stack.Navigator
+          screenOptions={{
+              headerShown: false,
           }}
-        />
-        <Tab.Screen 
-          name="Home" 
-          component={CameraComponent} 
-          options={{
-            tabBarIcon: ({ focused }) => {
-              return (
-                focused ? (
-                  <View style={styles.focused_quest}> 
-                    <Image 
-                      resizeMode='contain'
-                      source={require("./assets/explore_icon.png")}
-                    />
-                    <Text style={styles.text}>Quest</Text>
-                  </View>
-                  
-                ) : (
-                  <View style={styles.icon_container}> 
-                    <Image 
-                      resizeMode='contain'
-                      source={require("./assets/explore_icon.png")}
-                    />
-                    
-                  </View>
-                )
-              );
-            },
-          }}
-        />
-      </Tab.Navigator>
+      >
+          <Stack.Screen name="NavBar" component={NavBar} />
+          <Stack.Screen
+                name="Album"
+                component={AlbumScreen}
+                options={{ headerShown: false }}
+          />
+          <Stack.Screen
+                name="Draw"
+                component={DrawScreen}
+                options={{ headerShown: false }}
+          />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
