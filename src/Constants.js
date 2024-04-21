@@ -9,4 +9,6 @@ export const Colors = {
     background_orange: "#FFC34F",
     text_orange: "#C57C27",
     landing_orange: "#DAA24E",
+    brown: "#A86D36",
+    yellow: "#E2B33B"
 }
