@@ -10,7 +10,9 @@ import LoadingScreen from '../components/Loading';
 
 SplashScreen.preventAutoHideAsync();
 
-const ResultScreen = (props) => {
+const ResultScreen = ({ route }) => {
+    const { photo } = route.params;
+
     const [fontsLoaded, fontError] = useFonts({
         'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),
     });
@@ -24,17 +26,16 @@ const ResultScreen = (props) => {
     if (!fontsLoaded && !fontError) {
         return LoadingScreen;
     }
-
     
 
     return (
         <SafeAreaView style={styles.big_container} onLayout={onLayoutRootView}>
             <View style={styles.container}> 
                 <Text style={styles.name}>SCORE</Text>
-                <Text style={styles.name}>{props.score}/10 CARROTS </Text>
+                <Text style={styles.name}>10/10 CARROTS </Text>
                 <View style={styles.image_container}>
                     <Image 
-                        source={{uri: props.photo}}
+                        source={{uri: photo}}
                         style={styles.image}
                     />
                 </View>
