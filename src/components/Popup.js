@@ -33,17 +33,11 @@ export default Popup = (props) => {
             }}
             onLayout={onLayoutRootView}
         >
-            <View
-                style={styles.bigContainer}
-            >
-                <View
-                    style={styles.landmark}
-                >
+            <View style={styles.bigContainer}>
+                <View style={styles.landmark}>
                     <Text style={styles.landmarkText}>Landmark Discovered</Text>
                 </View>
-                <View
-                    style={styles.questBox}
-                >
+                <View style={styles.questBox}>
                     <Text style={styles.questTitle}>Quest</Text>
                     <Text style={styles.questText}>{props.quest}</Text>
                 </View>
@@ -62,10 +56,7 @@ export default Popup = (props) => {
                         <TouchableOpacity
                             // TODO: Add a press function
                         >
-                        <View 
-                            style={styles.yesBox}
-                            
-                            >
+                        <View style={styles.yesBox}>
                                 <Text style={styles.choiceText}>Yes</Text>
                             </View>
                         </TouchableOpacity>
@@ -127,7 +118,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '1.25rem',
+        padding: 10,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         backgroundColor: "#FFE381",

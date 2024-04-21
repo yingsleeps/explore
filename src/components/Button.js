@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: Colors.text_orange,
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 30,
         fontFamily: "RubikBubbles"
     },
 });

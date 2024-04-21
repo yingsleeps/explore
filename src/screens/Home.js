@@ -6,12 +6,14 @@ import React, { useEffect, useState, useRef } from "react";
 import MapView, { PROVIDER_GOOGLE, Polygon, Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import GrahamScan from 'graham_scan';
+import Button from '../components/Button.js';
+import {Dim} from '../Constants.js'
 
 import axios from 'axios';
 
 const googleApiKey = 'YOUR_GOOGLE_PLACES_API_KEY';  // Replace with your actual API key
 
-export default function App() {    
+export default function HomeScreen() {    
     const [camera, setCamera] = useState({
         center: {
             latitude: 34.0702,
@@ -27,6 +29,7 @@ export default function App() {
     const [points, setPoints] = useState([]);
     const [hullPoints, setHullPoints] = useState([]);
     const [places, setPlaces] = useState([{ latitude: 34.0702, longitude: -118.4467 }]);
+    const [visible, setVisible] = useState(false)
 
     useEffect(() => {
         let lastPosition = { latitude: null, longitude: null };
@@ -227,7 +230,7 @@ export default function App() {
     }
     
     return (
-        <View style={styles.container}>        
+        <View style={styles.container}>  
             <MapView
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}
@@ -269,6 +272,16 @@ const styles = StyleSheet.create({
 
     map: {
         ...StyleSheet.absoluteFillObject
+    },
+    button: {
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        height: 50,
+        borderRadius: 10,
+        marginBottom: 5,
+        marginRight: 7,
+        justifyContent: "center", 
+
     },
 });
 
