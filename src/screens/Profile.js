@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import { Colors, Dim } from '../Constants';
-import { Button } from '../components/Button.js';
+import Button  from '../components/Button.js';
 
 
 import { useFonts } from 'expo-font';
@@ -38,8 +38,8 @@ const ProfileScreen = () => {
                         />
                     </View> 
                     <Button 
-                        onPress={() => {}}
-                        text = "View Album"
+                        onPress={() => {console.log("hi")}}
+                        word = "View Album"
                     />
                 </View>
                     

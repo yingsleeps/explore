@@ -8,4 +8,5 @@ export const Dim = {
 export const Colors = {
     background_orange: "#FFC34F",
     text_orange: "#C57C27",
+    landing_orange: "#DAA24E",
 }
