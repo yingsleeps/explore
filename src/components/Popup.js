@@ -6,7 +6,6 @@ import { Dim } from "../Constants";
 import * as SplashScreen from 'expo-splash-screen';
 
 import Ranger from '../../assets/popup/ranger_popup.png'
-import { useNavigation } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,8 +24,6 @@ export default Popup = (props) => {
       if (!fontsLoaded && !fontError) {
         return null;
     };
-
-    const navigation = useNavigation();
     
     return (
         <SafeAreaView

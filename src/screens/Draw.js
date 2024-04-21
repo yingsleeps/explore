@@ -5,7 +5,6 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image, LayoutAnimatio
 import { Colors, Dim } from '../Constants';
 import Button  from '../components/Button.js';
 // import * as FileSystem from 'expo-file-system';
-import { captureRef } from 'react-native-view-shot';
 import axios from 'axios';
 import {
     Gesture,
@@ -22,7 +21,7 @@ import LoadingScreen from '../components/Loading';
 SplashScreen.preventAutoHideAsync();
 
 const DrawScreen = ({ route }) => {
-    const { location, latitude, longitude, quest } = route.params;
+    // const { location, latitude, longitude, quest } = route.params;
     const [fontsLoaded, fontError] = useFonts({
         'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),
     });
@@ -57,19 +56,19 @@ const DrawScreen = ({ route }) => {
             const uri = `data:image/png;base64,${bytes}`
             setCapturedImage(uri)
 
-            const formData = new FormData();
-            formData.append('image', { uri: uri, type: 'image/jpg', name: "aha.jpg" })
+            // const formData = new FormData();
+            // formData.append('image', { uri: uri, type: 'image/jpg', name: "aha.jpg" })
 
-            formData.append("name", location);
-            formData.append("latitude", latitude);
-            formData.append("longitude", longitude);
-            formData.append("userId", "CXbkwdUIVqax42ZAnNumXT1ETBR2");
-            formData.append("quest", quest);
+            // formData.append("name", location);
+            // formData.append("latitude", latitude);
+            // formData.append("longitude", longitude);
+            // formData.append("userId", "CXbkwdUIVqax42ZAnNumXT1ETBR2");
+            // formData.append("quest", quest);
 
-            await axios.post("http://localhost:4000/landmark/add/user", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-            }})
+            // await axios.post("http://localhost:4000/landmark/add/user", formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            // }})
 
             }
         } catch (error) {
