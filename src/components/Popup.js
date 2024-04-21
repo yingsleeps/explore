@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { Modal, StyleSheet, View, Text, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useFonts } from 'expo-font';
@@ -6,10 +6,12 @@ import { Dim } from "../Constants";
 import * as SplashScreen from 'expo-splash-screen';
 
 import Ranger from '../../assets/popup/ranger_popup.png'
+import { useNavigation } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
 export default Popup = (props) => {
+    const navigation = useNavigation()
     const [fontsLoaded, fontError] = useFonts({
         'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),
     });
@@ -27,6 +29,17 @@ export default Popup = (props) => {
     const navigation = useNavigation();
     
     return (
+        <SafeAreaView
+            style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: "center",
+                minWidth: "100%",
+                minHeight: "100%",
+                position: 'absolute',
+            }}
+        >
         <Modal
             animationType="slide"
             transparent={true}
@@ -35,7 +48,19 @@ export default Popup = (props) => {
                 props.setVisible(false);
             }}
             onLayout={onLayoutRootView}
+            style={{
+                position: "absolute"
+            }}
         >
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: "center",
+                minWidth: "100%",
+                minHeight: "100%",
+                position: 'absolute',
+            }}>
             <View style={styles.bigContainer}>
                 <View style={styles.landmark}>
                     <Text style={styles.landmarkText}>Landmark Discovered</Text>
@@ -57,7 +82,13 @@ export default Popup = (props) => {
                 >
                     <View style={styles.choiceContainer}>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate("Draw")}
+                            onPress={()=>{
+                                props.setVisible(false);
+                                if (props.art === 0)
+                                    navigation.navigate("Camera");
+                                else 
+                                    navigation.navigate("Draw");
+                            }}
                         >
                         <View style={styles.yesBox}>
                                 <Text style={styles.choiceText}>Yes</Text>
@@ -83,7 +114,9 @@ export default Popup = (props) => {
                     <Image source={Ranger}/>
                 </View>
             </View>
+            </View>
         </Modal>
+        </SafeAreaView>
     )
 }
 
@@ -109,6 +142,7 @@ const styles = StyleSheet.create({
         width: Dim.width*0.85,
         justifyContent: 'center',
         gap: 10,
+        marginTop: 75,
     },
     landmarkText: {
         fontSize: 40,

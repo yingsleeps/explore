@@ -3,6 +3,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { doc, setDoc, updateDoc, arrayUnion, getDoc } = require("firebase/firestore");
 const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const { encodeFileToBase64, fileToGenerativePart } = require('../utilities/utilities');
+const fs = require('fs');
 const axios = require("axios");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -71,7 +72,7 @@ const generatePrompt = async(req, res) => {
 
         const challengePrompt = (await challenge.response).text();
         
-        return res.status(200).json(challengePrompt);
+        return res.status(200).json({challengePrompt, art});
     } catch(err){
         console.log(err)
         return res.status(500).json("Internal Error");
@@ -91,7 +92,7 @@ const addUserToLandmark = async(req, res) => {
         // First Upload the Image so if there is an error you can send an error back
         const imageRef = ref(storage, `landmarks/${name}/${image.originalname}`);
         try{
-            await uploadBytes(imageRef, image);
+            await uploadBytes(imageRef, fs.readFileSync(image.path), { contentType: 'image/jpeg' });
         } catch(err){
             console.log(err);
             return res.status(500).json("Internal Error");
@@ -151,7 +152,7 @@ const addUserToLandmark = async(req, res) => {
             return res.status(400).json("Failed ot update User");
         }
 
-        return res.status(200).json("Success");
+        return res.status(200).json(rating);
     } catch(err){
         console.log(err)
         return res.status(500).json("Internal Error");
@@ -164,7 +165,7 @@ const generateLandmarks = async(req, res) => {
         const { latitude, longitude } = req.params
 
         const locationUriComponent = encodeURIComponent(`${latitude},${longitude}`)
-        const radius = 16093.4; // this is measured in meters
+        const radius = 1609.4; // this is measured in meters
 
         let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${locationUriComponent}&radius=${radius}000&key=${process.env.GOOGLE_MAPS_API_KEY}&types=landmark`
 
@@ -190,7 +191,7 @@ const generateLandmarks = async(req, res) => {
             res.status(501).json("Failed to Request Landmarks");
         }
 
-        const firstTenLocations = response.data.results.slice(0, 10);
+        const firstTenLocations = response.data.results.slice(0, 100);
     
         const questLocations = [];
 
