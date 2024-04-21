@@ -1,4 +1,5 @@
 import { Modal, StyleSheet, View, Text, TouchableOpacity, Image, SafeAreaView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useFonts } from 'expo-font';
 import { Dim } from "../Constants";
@@ -24,6 +25,8 @@ export default Popup = (props) => {
       if (!fontsLoaded && !fontError) {
         return null;
     };
+
+    const navigation = useNavigation();
     
     return (
         <SafeAreaView

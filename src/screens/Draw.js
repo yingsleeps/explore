@@ -1,14 +1,18 @@
-import { useCallback, useState,  } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { useCallback, useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { Canvas, Path, useCanvasRef } from "@shopify/react-native-skia";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image, LayoutAnimation } from 'react-native';
 import { Colors, Dim } from '../Constants';
 import Button  from '../components/Button.js';
-
+// import * as FileSystem from 'expo-file-system';
+import { captureRef } from 'react-native-view-shot';
+import axios from 'axios';
 import {
     Gesture,
     GestureDetector,
     GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { Canvas, Path } from "@shopify/react-native-skia";
+
 
 
 import { useFonts } from 'expo-font';
@@ -17,7 +21,8 @@ import LoadingScreen from '../components/Loading';
 
 SplashScreen.preventAutoHideAsync();
 
-const DrawScreen = () => {
+const DrawScreen = ({ route }) => {
+    const { location, latitude, longitude, quest } = route.params;
     const [fontsLoaded, fontError] = useFonts({
         'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),
     });
@@ -32,14 +37,52 @@ const DrawScreen = () => {
         return LoadingScreen;
     }
 
+    const navigation = useNavigation();
+
     const [paths, setPaths] = useState([]);
+
+    // for sc canvas
+    const [capturedImage, setCapturedImage] = useState(null);
+    const canvasRef = useCanvasRef(null);
+
+    const captureCanvas = async () => {
+        if (!canvasRef.current) {
+          return;
+        }
+      
+        try {
+          const image = await canvasRef.current?.makeImageSnapshotAsync();
+          if (image) { 
+            const bytes = image.encodeToBase64();
+            const uri = `data:image/png;base64,${bytes}`
+            setCapturedImage(uri)
+
+            const formData = new FormData();
+            formData.append('image', { uri: uri, type: 'image/jpg', name: "aha.jpg" })
+
+            formData.append("name", location);
+            formData.append("latitude", latitude);
+            formData.append("longitude", longitude);
+            formData.append("userId", "CXbkwdUIVqax42ZAnNumXT1ETBR2");
+            formData.append("quest", quest);
+
+            await axios.post("http://localhost:4000/landmark/add/user", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+            }})
+
+            }
+        } catch (error) {
+          console.error('Error capturing canvas:', error);
+        }
+    };
 
     const pan = Gesture.Pan()
     .onStart((g) => {
         const newPaths = [...paths];
         newPaths[paths.length] = {
             segments: [],
-            color: "#06d6a0",
+            color: "#000000",
         };
         newPaths[paths.length].segments.push(`M ${g.x} ${g.y}`);
         setPaths(newPaths);
@@ -61,7 +104,7 @@ const DrawScreen = () => {
                 <GestureHandlerRootView style={{ flex: 1, maxHeight: "80%", height: "70%", margin: 0 }}>
                     <GestureDetector gesture={pan}>
                         <View style={styles.draw}>
-                            <Canvas style={{ flex: 8 }}>
+                            <Canvas style={{ flex: 8 }} ref={canvasRef}>
                                 {paths.map((p, index) => (
                                 <Path
                                     key={index}
@@ -77,7 +120,13 @@ const DrawScreen = () => {
                 </GestureHandlerRootView>
                 <View style={styles.button_container}> 
                 <Button 
-                    onPress={() => {console.log("hi")}}
+                    onPress={() => {
+                        captureCanvas();
+                        if (capturedImage) {
+                            console.log(capturedImage)
+                            navigation.navigate("Result", {photo: capturedImage})
+                        }
+                    }}
                     text = "OK"
                     style={styles.button}
                 />

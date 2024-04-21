@@ -11,7 +11,9 @@ import NavBar from './src/navigation/NavBar.js';
 import DrawScreen from './src/screens/Draw.js';
 import AlbumScreen from './src/screens/Album.js';
 import Popup from './src/components/Popup.js';
+import ResultScreen from './src/screens/Result.js';
 import CameraComponent from './src/screens/Camera.js';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +48,11 @@ export default function App() {
           <Stack.Screen
                 name="Popup"
                 component={Popup}
+                options={{ headerShown: false }}
+          />
+          <Stack.Screen
+                name="Result"
+                component={ResultScreen}
                 options={{ headerShown: false }}
           />
           <Stack.Screen
