@@ -2,7 +2,13 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Dim, Colors } from "../Constants";
 
+import { useFonts } from 'expo-font';
+
 const Button = (props) => {
+    const [fontsLoaded, fontError] = useFonts({
+        'RubikBubbles': require('../../assets/fonts/RubikBubbles.ttf'),
+    });
+
     return (
         <TouchableOpacity onPress={props.onPress}>
             <View style={styles.button}>
@@ -26,7 +32,8 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: Colors.text_orange,
         fontWeight: "bold",
-        fontSize: 15,
+        fontSize: 20,
+        fontFamily: "RubikBubbles"
     },
 });
 

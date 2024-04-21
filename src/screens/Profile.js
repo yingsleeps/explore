@@ -30,17 +30,22 @@ const ProfileScreen = () => {
             <ScrollView> 
                 <View style={styles.container}> 
                     <Text style={styles.name}>Ranger</Text>
-                    <Text style={styles.name}>Lawrence</Text>
+                    <Text style={styles.name}>Sid</Text>
                     <View style={styles.picContainer}> 
                         <Image 
                             source={require("../../assets/BunnyProfile.png")}
                             style={styles.profile}
                         />
                     </View> 
-                    <Button 
-                        onPress={() => {console.log("hi")}}
-                        word = "View Album"
-                    />
+                    <Text style={styles.name}>Achievements</Text>
+                    <View style={styles.button}>
+                        <Button 
+                            onPress={() => {console.log("hi")}}
+                            text = "View Album"
+                            style={styles.button}
+                        />
+                    </View>
+                        
                 </View>
                     
             </ScrollView> 
@@ -69,7 +74,14 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
     picContainer: {
-        paddingTop: 30,
+        margin: 20,
+    },
+    button: {
+        alignSelf: "center",
+        margin: 20, 
+    },
+    achievements: {
+
     }
 })
 
