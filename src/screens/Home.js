@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, Button } from 'react-native';
 import { Colors } from '../Constants.js' 
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, useRef, useCallback, memo } from "react";
@@ -39,11 +39,12 @@ export default function HomeScreen() {
         zoom: 18
     });
 
-    const mapRef = useRef(camera);
+    const mapRef = useRef(null);
     const [points, setPoints] = useState([]);
     const [hullPoints, setHullPoints] = useState([]);
     const [places, setPlaces] = useState([]);
 
+    const [lockModeEnabled, setLockModeEnabled] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentQuest, setCurrentQuest] = useState('');
 
@@ -84,25 +85,28 @@ export default function HomeScreen() {
                 //     }));
                 // }
 
-                const newHeading = lastPosition.latitude ? calculateBearing(
-                    lastPosition.latitude,
-                    lastPosition.longitude,
-                    latitude,
-                    longitude
-                ) : camera.heading;
-
-                const newCamera = {
-                    ...camera,
-                    center: newPosition,
-                    heading: newHeading  // maintain the old heading initially
-                };
-
-                setCamera(newCamera);
-
-                // Animate camera smoothly to the new position and heading
-                if (mapRef.current) {
-                    mapRef.current.animateCamera(newCamera, { duration: 1000 });
+                if (lockModeEnabled) {
+                    const newHeading = lastPosition.latitude ? calculateBearing(
+                        lastPosition.latitude,
+                        lastPosition.longitude,
+                        latitude,
+                        longitude
+                    ) : camera.heading;
+    
+                    const newCamera = {
+                        ...camera,
+                        center: newPosition,
+                        heading: newHeading  // maintain the old heading initially
+                    };
+    
+                    setCamera(newCamera);
+    
+                    // Animate camera smoothly to the new position and heading
+                    if (mapRef.current) {
+                        mapRef.current.animateCamera(newCamera, { duration: 1000 });
+                    }
                 }
+
 
                 fetchLandmarks(latitude, longitude).then(data => {
                     setPlaces(data);
@@ -129,7 +133,7 @@ export default function HomeScreen() {
         );
 
         return () => Geolocation.clearWatch(watchId);
-    }, [hullPoints]);
+    }, [hullPoints, lockModeEnabled]);
 
     function calculateBearing(startLat, startLng, destLat, destLng) {
         startLat = degreesToRadians(startLat);
@@ -213,14 +217,14 @@ export default function HomeScreen() {
                 style={styles.map}
                 initialCamera={camera}
                 showsUserLocation={true}
-                showsMyLocationButton={true}
+                showsMyLocationButton={!lockModeEnabled}
                 showsBuildings={true}
-                followsUserLocation={true}
-                showsCompass={true}
-                scrollEnabled={true}
-                zoomEnabled={true}
-                pitchEnabled={true}
+                followsUserLocation={lockModeEnabled}
+                showsCompass={!lockModeEnabled}
+                scrollEnabled={!lockModeEnabled}
+                pitchEnabled={!lockModeEnabled}
                 rotateEnabled={true}
+                zoomEnabled={true}
             >
                 {hullPoints.length > 0 && (
                     <Polygon
@@ -232,6 +236,13 @@ export default function HomeScreen() {
                 )}
                 {renderMarkers()}
             </MapView>
+            <View style={styles.buttonContainer}>
+                <Button
+                    title={lockModeEnabled ? "Unlock Camera" : "Lock Camera"}
+                    onPress={() => setLockModeEnabled(!lockModeEnabled)}
+                    color="#841584"
+                />
+            </View>
             <Popup visible={modalVisible} setVisible={setModalVisible} quest={currentQuest} />
             <StatusBar style="auto" />
         </View>
@@ -249,15 +260,12 @@ const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject
     },
-    button: {
-        backgroundColor: "white",
-        paddingHorizontal: 20,
-        height: 50,
-        borderRadius: 10,
-        marginBottom: 5,
-        marginRight: 7,
-        justifyContent: "center", 
-
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 100,
+        backgroundColor: "rgba(255,255,255,0.8)",
+        borderRadius: 100,
+        padding: 10,
     },
 });
 
