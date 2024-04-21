@@ -28,18 +28,18 @@ const MarkerItem = memo(({ detail, onPress }) => (
 ));
 
 export default function HomeScreen() {    
+    const mapRef = useRef(null);
+    const [userLocation, setUserLocation] = useState({
+        latitude: 34.0702,
+        longitude: -118.4467,
+    });
     const [camera, setCamera] = useState({
-        center: {
-            latitude: 34.0702,
-            longitude: -118.4467,
-        },
+        center: userLocation,
         pitch: 45,
         heading: 0,
         altitude: 0,
         zoom: 18
     });
-
-    const mapRef = useRef(null);
     const [points, setPoints] = useState([]);
     const [hullPoints, setHullPoints] = useState([]);
     const [places, setPlaces] = useState([]);
@@ -55,6 +55,7 @@ export default function HomeScreen() {
             (pos) => {
                 const { latitude, longitude } = pos.coords;
                 const newPosition = {latitude, longitude};
+                setUserLocation(newPosition);
                 const newRectangle = getRectanglePoints({ latitude, longitude });
 
                 // if (getDistance(lastPosition.latitude, lastPosition.longitude, latitude, longitude) > 2) { // meters
@@ -216,7 +217,7 @@ export default function HomeScreen() {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 initialCamera={camera}
-                showsUserLocation={true}
+                showsUserLocation={false}
                 showsMyLocationButton={!lockModeEnabled}
                 showsBuildings={true}
                 followsUserLocation={lockModeEnabled}
@@ -234,6 +235,14 @@ export default function HomeScreen() {
                         strokeWidth={1}
                     />
                 )}
+                <Marker
+                    coordinate={userLocation}
+                >
+                    <Image
+                        source={require('../../assets/loc_icon_front.png')}
+                        style={{ width: 80, height: 80 }}
+                    />
+                </Marker>
                 {renderMarkers()}
             </MapView>
             <View style={styles.buttonContainer}>
