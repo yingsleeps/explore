@@ -4,7 +4,8 @@
   <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Your location is required to explore</string>
-    
+    <key>NSCameraUsageDescription</key>
+    <string>Your camera is required to take pictures.</string>
     <key>CADisableMinimumFrameDurationOnPhone</key>
     <true/>
     <key>CFBundleDevelopmentRegion</key>

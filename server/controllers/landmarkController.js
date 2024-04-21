@@ -3,6 +3,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { doc, setDoc, updateDoc, arrayUnion, getDoc } = require("firebase/firestore");
 const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const { encodeFileToBase64, fileToGenerativePart } = require('../utilities/utilities');
+const fs = require('fs');
 const axios = require("axios");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -91,7 +92,7 @@ const addUserToLandmark = async(req, res) => {
         // First Upload the Image so if there is an error you can send an error back
         const imageRef = ref(storage, `landmarks/${name}/${image.originalname}`);
         try{
-            await uploadBytes(imageRef, image);
+            await uploadBytes(imageRef, fs.readFileSync(image.path), { contentType: 'image/jpeg' });
         } catch(err){
             console.log(err);
             return res.status(500).json("Internal Error");
@@ -151,7 +152,7 @@ const addUserToLandmark = async(req, res) => {
             return res.status(400).json("Failed ot update User");
         }
 
-        return res.status(200).json("Success");
+        return res.status(200).json(rating);
     } catch(err){
         console.log(err)
         return res.status(500).json("Internal Error");
