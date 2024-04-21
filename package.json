@@ -4,8 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -13,6 +13,9 @@
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "@react-native-community/geolocation": "^3.2.1",
+    "@types/react": "~18.2.45",
+    "convex-hull": "^1.0.3",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "expo": "~50.0.14",
@@ -25,10 +28,15 @@
     "fs": "^0.0.1-security",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0",
+    "graham_scan": "^1.0.5",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-screens": "~3.29.0",
-    "react-native-svg": "14.1.0"
+    "react-native-svg": "14.1.0",
+    "react-native-geolocation-service": "^5.3.1",
+    "react-native-google-places-autocomplete": "^2.5.6",
+    "react-native-maps": "^1.14.0",
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
