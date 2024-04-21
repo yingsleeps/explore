@@ -1,14 +1,18 @@
-import { useCallback, useState,  } from 'react';
+import { useCallback, useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { Canvas, Path, useCanvasRef } from "@shopify/react-native-skia";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import { Colors, Dim } from '../Constants';
 import Button  from '../components/Button.js';
-
+// import * as FileSystem from 'expo-file-system';
+import { captureRef } from 'react-native-view-shot';
+import axios from 'axios';
 import {
     Gesture,
     GestureDetector,
     GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { Canvas, Path } from "@shopify/react-native-skia";
+
 
 
 import { useFonts } from 'expo-font';
@@ -32,14 +36,38 @@ const DrawScreen = () => {
         return LoadingScreen;
     }
 
+    const navigation = useNavigation();
+
     const [paths, setPaths] = useState([]);
+
+    // for sc canvas
+    const [capturedImage, setCapturedImage] = useState(null);
+    const canvasRef = useCanvasRef(null);
+
+    const captureCanvas = async () => {
+        if (!canvasRef.current) {
+          return;
+        }
+      
+        try {
+          const image = await canvasRef.current?.makeImageSnapshotAsync();
+          if (image) { 
+            const bytes = await image.encodeToBase64();
+            setCapturedImage(bytes)
+            console.log(capturedImage);
+
+            }
+        } catch (error) {
+          console.error('Error capturing canvas:', error);
+        }
+    };
 
     const pan = Gesture.Pan()
     .onStart((g) => {
         const newPaths = [...paths];
         newPaths[paths.length] = {
             segments: [],
-            color: "#06d6a0",
+            color: "#000000",
         };
         newPaths[paths.length].segments.push(`M ${g.x} ${g.y}`);
         setPaths(newPaths);
@@ -61,7 +89,7 @@ const DrawScreen = () => {
                 <GestureHandlerRootView style={{ flex: 1, maxHeight: "80%", height: "70%", margin: 0 }}>
                     <GestureDetector gesture={pan}>
                         <View style={styles.draw}>
-                            <Canvas style={{ flex: 8 }}>
+                            <Canvas style={{ flex: 8 }} ref={canvasRef}>
                                 {paths.map((p, index) => (
                                 <Path
                                     key={index}
@@ -77,7 +105,10 @@ const DrawScreen = () => {
                 </GestureHandlerRootView>
                 <View style={styles.button_container}> 
                 <Button 
-                    onPress={() => {console.log("hi")}}
+                    onPress={() => {
+                        captureCanvas();
+                        // navigation.navigate("Result", {photo: image})
+                    }}
                     text = "OK"
                     style={styles.button}
                 />

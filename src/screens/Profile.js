@@ -45,7 +45,7 @@ const ProfileScreen = () => {
                 </View>
                 <View style={styles.button_container}>
                     <Button 
-                        onPress={() => { navigation.navigate("Album"); }}
+                        onPress={() => { navigation.navigate("Draw"); }}
                         text = "View Album"
                         style={styles.button}
                     />

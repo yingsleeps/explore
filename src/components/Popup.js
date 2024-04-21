@@ -1,4 +1,5 @@
 import { Modal, StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useFonts } from 'expo-font';
 import { Dim } from "../Constants";
@@ -22,6 +23,8 @@ export default Popup = (props) => {
       if (!fontsLoaded && !fontError) {
         return null;
     };
+
+    const navigation = useNavigation();
     
     return (
         <Modal
@@ -54,7 +57,7 @@ export default Popup = (props) => {
                 >
                     <View style={styles.choiceContainer}>
                         <TouchableOpacity
-                            // TODO: Add a press function
+                            onPress={() => navigation.navigate("Draw")}
                         >
                         <View style={styles.yesBox}>
                                 <Text style={styles.choiceText}>Yes</Text>
