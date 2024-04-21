@@ -7,7 +7,7 @@ import axios from "axios";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import LoadingScreen from "../components/Loading";
-// import SpinAnimation from "../components/SpinAnimation";
+import SpinAnimation from "../components/SpinAnimation";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,9 +32,10 @@ export default function CameraComponent() {
     }
 
     const takePicture = useCallback(async () => {
+        if (camera.current === null) return;
         if (loading) return
-        else setLoading(true)
-        if (camera === null) return;
+        setLoading(true)
+        // if (!camera) return;
         const photo = await camera.takePictureAsync();
         
         console.log(photo)
@@ -56,10 +57,17 @@ export default function CameraComponent() {
                 headers: {
                     'Content-Type': 'multipart/form-data'
             }})
-            .then((res)=>console.log(res.data))
+            .then((res)=>{
+                console.log(res.data)
+                // TODO: Navigate to the next page
+            })
             .catch((err)=>console.log(err))
-        setLoading(false);
+            .finally(()=>setLoading(false));
     }, [camera, loading, setLoading]);
+
+    useEffect(()=>{
+
+    },[])
 
     useEffect(() => {
         (async () => {
@@ -92,7 +100,7 @@ export default function CameraComponent() {
             }}
             onLayout={onLayoutRootView}
         >
-            {/* {loading && 
+            {loading && 
                 <View style={{
                     flex: 1,
                     backgroundColor: "rgba(202, 219, 99, 0.8)",
@@ -111,7 +119,7 @@ export default function CameraComponent() {
                         <SpinAnimation/> 
                     </View>
                 </View>
-            } */}
+            }
             <Text
                 style={{
                     fontSize: 60,
