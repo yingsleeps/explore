@@ -10,6 +10,9 @@ import HomeScreen from './src/screens/Home';
 import LoadingScreen from './src/components/Loading.js';
 import DrawScreen from './src/screens/Draw.js';
 
+import { disableErrorHandling } from 'expo';
+
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -20,8 +23,7 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     return <LoadingScreen/>;
   }
-
-  return (<DrawScreen/>)
+  
   return (
     <NavigationContainer>
       <Tab.Navigator 
