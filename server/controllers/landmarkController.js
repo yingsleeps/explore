@@ -34,19 +34,27 @@ const generatePrompt = async(req, res) => {
         
         // This would be used if we want offline capabilties
         // Prompt Gemini to find out whether or not it is a city
-        // const natureChat = model.startChat({
-        //     history: [
-        //     ],
-        //     generationConfig: {
-        //       maxOutputTokens: 100,
-        //     },
-        //   });
-        // const natureOrCityPrompt = 
-        // `I am going to give you longitude and latitude coordinates. Can you please tell me whether these coordinates are in a city or in nature? If it is in a city please respond with "city" and if it is in nature please respond with "nature", thank you. ${landmark.latitude}, ${landmark.longitude}`;
-        // const natureOrCity = await natureChat.sendMessage(natureOrCityPrompt); // If its nature it will reply with "nature";
+        const natureChat = model.startChat({
+            history: [
+            ],
+            generationConfig: {
+              maxOutputTokens: 100,
+            },
+          });
+        const natureOrCityPrompt = 
+        `I am going to give you longitude and latitude coordinates. Can you please tell me whether these coordinates are in a city or in nature? If it is in a city please respond with "city" and if it is in nature please respond with "nature", thank you. ${landmark.latitude}, ${landmark.longitude}`;
+        const natureOrCity = await (await natureChat.sendMessage(natureOrCityPrompt)).response.text(); // If its nature it will reply with "nature";
         
         var challenge;
         const promptChat = model.startChat()
+
+        if(natureOrCity === "nature"){
+            if (art){
+                return res.status(200).json("Draw a picture of your surrounding landscape.");
+            } else {
+                return res.status(200).json("Take a picture of your surrounding landscape.");
+            }
+        }
 
         // Prompt to generate a challenge
         if (art /* If its a drawing this will be true */){
